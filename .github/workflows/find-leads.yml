@@ -1,0 +1,28 @@
+name: Weekly lead finder
+
+on:
+  schedule:
+    - cron: '0 8 * * 3' # every Wednesday 08:00 UTC
+  workflow_dispatch: {} # trigger manually to test / run on demand
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  find-leads:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+
+      - name: Search for leads
+        env:
+          GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
+          GOOGLE_PAGESPEED_API_KEY: ${{ secrets.GOOGLE_PAGESPEED_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/find-leads.js

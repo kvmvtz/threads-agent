@@ -1,0 +1,26 @@
+name: Refresh Threads token
+
+on:
+  schedule:
+    # Weekly is plenty — long-lived tokens are valid 60 days and refreshable
+    # any time between 24h and 60d after issue. Running weekly keeps it
+    # comfortably fresh with room to notice/fix problems before expiry.
+    - cron: '0 6 * * 1' # every Monday 06:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+
+      - name: Refresh long-lived token and update the repo secret
+        env:
+          THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+          ADMIN_PAT: ${{ secrets.ADMIN_PAT }}
+        run: npm run refresh-token

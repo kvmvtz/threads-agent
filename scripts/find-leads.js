@@ -145,6 +145,33 @@ async function rawSiteSignals(url) {
 
 // ---------- lead evaluation ----------
 
+// Businesses that link a social/messaging page instead of a real website in
+// their Google Maps "website" field. Facebook Graph API doesn't let a
+// third-party app *search* Pages by category/city (Page Public Metadata
+// Access needs Business Verification + App Review, and even then it's scoped
+// to analytics, not cold prospecting) — so instead of searching Facebook
+// directly, we piggyback on Google Maps' own discovery (which we already do)
+// and just check what kind of "website" each business actually links.
+const SOCIAL_ONLY_HOSTS = [
+  { match: /(^|\.)facebook\.com$/i, platform: 'Facebook' },
+  { match: /(^|\.)fb\.com$/i, platform: 'Facebook' },
+  { match: /(^|\.)m\.me$/i, platform: 'Facebook Messenger' },
+  { match: /(^|\.)instagram\.com$/i, platform: 'Instagram' },
+  { match: /(^|\.)wa\.me$/i, platform: 'WhatsApp' },
+  { match: /(^|\.)api\.whatsapp\.com$/i, platform: 'WhatsApp' },
+  { match: /(^|\.)linktr\.ee$/i, platform: 'Linktree (агрегатор ссылок)' },
+];
+
+function detectSocialOnly(website) {
+  try {
+    const host = new URL(website).hostname;
+    for (const s of SOCIAL_ONLY_HOSTS) if (s.match.test(host)) return s.platform;
+  } catch {
+    // not a parseable URL — treat like a normal (weird) website below
+  }
+  return null;
+}
+
 async function evaluatePlace(place, category) {
   const name = place.displayName?.text || '(без названия)';
   const website = place.websiteUri;
@@ -155,6 +182,16 @@ async function evaluatePlace(place, category) {
       website: '(нет сайта)',
       problem: 'Сайта нет вообще — самый простой питч: помочь появиться онлайн.',
       opener: `Hi! I noticed ${name} doesn't have a website yet — happy to put together a simple one so people can find/book you online. No pressure, just let me know if useful.`,
+    };
+  }
+
+  const socialPlatform = detectSocialOnly(website);
+  if (socialPlatform) {
+    return {
+      isLead: true,
+      website,
+      problem: `Вместо сайта — страница ${socialPlatform} (своего домена/сайта нет).`,
+      opener: `Hi! Noticed ${name} runs on a ${socialPlatform} page instead of its own website — happy to put together a simple site so people can find/book you directly (and own the domain/branding). No pressure, just let me know if useful.`,
     };
   }
 

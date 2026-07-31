@@ -1,18 +1,15 @@
 {
-  "name": "threads-daily-design-agent",
-  "version": "1.0.0",
+  "name": "leads-agent",
+  "version": "2.0.0",
   "private": true,
-  "description": "Fully automated daily Threads poster: scroll-records a website from a queue and publishes it via the Threads API.",
+  "description": "Lead-finder bot: scans Google Maps + Telegram chats for potential clients and drafts openers. Never sends anything automatically.",
   "type": "commonjs",
   "scripts": {
-    "run-daily": "node scripts/run-daily.js",
-    "refresh-token": "node scripts/refresh-token.js",
-    "get-first-token": "node scripts/get-first-token.js",
-    "find-leads": "node scripts/find-leads.js"
+    "find-leads": "node scripts/find-leads.js",
+    "find-leads-telegram": "node scripts/find-leads-telegram.js",
+    "telegram-login": "node scripts/telegram-login.js"
   },
   "dependencies": {
-    "playwright": "1.56.0",
-    "tweetnacl": "^1.0.3",
-    "tweetnacl-util": "^0.15.1"
+    "teleproto": "^1.228.4"
   }
 }

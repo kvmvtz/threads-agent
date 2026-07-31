@@ -29,6 +29,40 @@ business's Google Maps "website" is actually a `facebook.com` / `m.me` /
 real site, just a social page. See `detectSocialOnly()` in
 `scripts/find-leads.js`.
 
+## Desktop buttons (if you got this via the Desktop folder)
+
+Next to this README you should have:
+
+- **🤖 Запустить бота (Google Maps).command** — triggers the Google Maps
+  finder on demand instead of waiting for its schedule.
+- **📱 Запустить бота (Telegram).command** — triggers the Telegram finder on
+  demand. Safe to click even before Telegram is set up — it just finds
+  nothing until `telegram_chats.txt` has entries and the Telegram secrets are
+  set.
+- **📋 Таблица лидов.command** — opens `leads_found.csv` on GitHub in your
+  browser (GitHub renders CSVs as a nice table — this is always the current
+  version, no local file to keep in sync). Shows leads from both sources.
+- **repo-config.txt** — the ONE file you edit: put your `owner/repo` in there
+  and all three buttons pick it up automatically. Already filled in with
+  `kvmvtz/threads-agent` — no need to touch it unless you create the repo
+  again under a different name.
+- **🧵 Код агента.zip** — this whole project. You shouldn't need it day to
+  day (the code already lives in the GitHub repo), but it's here as a local
+  backup / in case you want to inspect the code offline.
+
+The buttons need GitHub CLI installed and logged in once:
+
+```
+brew install gh   # or download from https://cli.github.com
+gh auth login      # follow the prompts, choose GitHub.com → HTTPS → login via browser
+```
+
+After that, double-clicking a button runs the matching `gh workflow run`
+against whatever repo is in `repo-config.txt` and opens the run in your
+browser. If double-clicking a `.command` file ever just opens it in a text
+editor instead of running it, right-click → Open With → Terminal once, or
+run `chmod +x` on it from Terminal.
+
 ## Setting up the Google Maps lead finder
 
 ### 1. Get a Google Cloud API key

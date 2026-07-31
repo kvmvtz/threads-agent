@@ -1,0 +1,235 @@
+# Queue of "category | city" search terms for the weekly lead-finder bot.
+# One per line. The bot processes a handful per run (see MAX_TERMS_PER_RUN in
+# the workflow) and cycles back to the top once it reaches the end — so
+# there's no harm in a long list, and re-scanning a city/category later picks
+# up newly opened businesses too.
+#
+# Edit freely: delete categories/cities that don't fit, add new ones. Format
+# must stay "Category | City" (city can include country if useful, e.g.
+# "Tbilisi, Georgia").
+
+hair salon | Lisbon
+dentist | Lisbon
+plumber | Lisbon
+electrician | Lisbon
+auto repair shop | Lisbon
+yoga studio | Lisbon
+pet grooming | Lisbon
+boutique clothing store | Lisbon
+photographer | Lisbon
+florist | Lisbon
+cleaning service | Lisbon
+real estate agency | Lisbon
+tattoo studio | Lisbon
+coworking space | Lisbon
+bakery | Lisbon
+hair salon | Tbilisi
+dentist | Tbilisi
+plumber | Tbilisi
+electrician | Tbilisi
+auto repair shop | Tbilisi
+yoga studio | Tbilisi
+pet grooming | Tbilisi
+boutique clothing store | Tbilisi
+photographer | Tbilisi
+florist | Tbilisi
+cleaning service | Tbilisi
+real estate agency | Tbilisi
+tattoo studio | Tbilisi
+coworking space | Tbilisi
+bakery | Tbilisi
+hair salon | Belgrade
+dentist | Belgrade
+plumber | Belgrade
+electrician | Belgrade
+auto repair shop | Belgrade
+yoga studio | Belgrade
+pet grooming | Belgrade
+boutique clothing store | Belgrade
+photographer | Belgrade
+florist | Belgrade
+cleaning service | Belgrade
+real estate agency | Belgrade
+tattoo studio | Belgrade
+coworking space | Belgrade
+bakery | Belgrade
+hair salon | Budapest
+dentist | Budapest
+plumber | Budapest
+electrician | Budapest
+auto repair shop | Budapest
+yoga studio | Budapest
+pet grooming | Budapest
+boutique clothing store | Budapest
+photographer | Budapest
+florist | Budapest
+cleaning service | Budapest
+real estate agency | Budapest
+tattoo studio | Budapest
+coworking space | Budapest
+bakery | Budapest
+hair salon | Prague
+dentist | Prague
+plumber | Prague
+electrician | Prague
+auto repair shop | Prague
+yoga studio | Prague
+pet grooming | Prague
+boutique clothing store | Prague
+photographer | Prague
+florist | Prague
+cleaning service | Prague
+real estate agency | Prague
+tattoo studio | Prague
+coworking space | Prague
+bakery | Prague
+hair salon | Warsaw
+dentist | Warsaw
+plumber | Warsaw
+electrician | Warsaw
+auto repair shop | Warsaw
+yoga studio | Warsaw
+pet grooming | Warsaw
+boutique clothing store | Warsaw
+photographer | Warsaw
+florist | Warsaw
+cleaning service | Warsaw
+real estate agency | Warsaw
+tattoo studio | Warsaw
+coworking space | Warsaw
+bakery | Warsaw
+hair salon | Limassol
+dentist | Limassol
+plumber | Limassol
+electrician | Limassol
+auto repair shop | Limassol
+yoga studio | Limassol
+pet grooming | Limassol
+boutique clothing store | Limassol
+photographer | Limassol
+florist | Limassol
+cleaning service | Limassol
+real estate agency | Limassol
+tattoo studio | Limassol
+coworking space | Limassol
+bakery | Limassol
+hair salon | Budva, Montenegro
+dentist | Budva, Montenegro
+plumber | Budva, Montenegro
+electrician | Budva, Montenegro
+auto repair shop | Budva, Montenegro
+yoga studio | Budva, Montenegro
+pet grooming | Budva, Montenegro
+boutique clothing store | Budva, Montenegro
+photographer | Budva, Montenegro
+florist | Budva, Montenegro
+cleaning service | Budva, Montenegro
+real estate agency | Budva, Montenegro
+tattoo studio | Budva, Montenegro
+coworking space | Budva, Montenegro
+bakery | Budva, Montenegro
+hair salon | Canggu, Bali
+dentist | Canggu, Bali
+plumber | Canggu, Bali
+electrician | Canggu, Bali
+auto repair shop | Canggu, Bali
+yoga studio | Canggu, Bali
+pet grooming | Canggu, Bali
+boutique clothing store | Canggu, Bali
+photographer | Canggu, Bali
+florist | Canggu, Bali
+cleaning service | Canggu, Bali
+real estate agency | Canggu, Bali
+tattoo studio | Canggu, Bali
+coworking space | Canggu, Bali
+bakery | Canggu, Bali
+hair salon | Dubai
+dentist | Dubai
+plumber | Dubai
+electrician | Dubai
+auto repair shop | Dubai
+yoga studio | Dubai
+pet grooming | Dubai
+boutique clothing store | Dubai
+photographer | Dubai
+florist | Dubai
+cleaning service | Dubai
+real estate agency | Dubai
+tattoo studio | Dubai
+coworking space | Dubai
+bakery | Dubai
+hair salon | Mexico City
+dentist | Mexico City
+plumber | Mexico City
+electrician | Mexico City
+auto repair shop | Mexico City
+yoga studio | Mexico City
+pet grooming | Mexico City
+boutique clothing store | Mexico City
+photographer | Mexico City
+florist | Mexico City
+cleaning service | Mexico City
+real estate agency | Mexico City
+tattoo studio | Mexico City
+coworking space | Mexico City
+bakery | Mexico City
+hair salon | Chiang Mai
+dentist | Chiang Mai
+plumber | Chiang Mai
+electrician | Chiang Mai
+auto repair shop | Chiang Mai
+yoga studio | Chiang Mai
+pet grooming | Chiang Mai
+boutique clothing store | Chiang Mai
+photographer | Chiang Mai
+florist | Chiang Mai
+cleaning service | Chiang Mai
+real estate agency | Chiang Mai
+tattoo studio | Chiang Mai
+coworking space | Chiang Mai
+bakery | Chiang Mai
+hair salon | Sao Paulo
+dentist | Sao Paulo
+plumber | Sao Paulo
+electrician | Sao Paulo
+auto repair shop | Sao Paulo
+yoga studio | Sao Paulo
+pet grooming | Sao Paulo
+boutique clothing store | Sao Paulo
+photographer | Sao Paulo
+florist | Sao Paulo
+cleaning service | Sao Paulo
+real estate agency | Sao Paulo
+tattoo studio | Sao Paulo
+coworking space | Sao Paulo
+bakery | Sao Paulo
+hair salon | Florianopolis
+dentist | Florianopolis
+plumber | Florianopolis
+electrician | Florianopolis
+auto repair shop | Florianopolis
+yoga studio | Florianopolis
+pet grooming | Florianopolis
+boutique clothing store | Florianopolis
+photographer | Florianopolis
+florist | Florianopolis
+cleaning service | Florianopolis
+real estate agency | Florianopolis
+tattoo studio | Florianopolis
+coworking space | Florianopolis
+bakery | Florianopolis
+hair salon | Bangkok
+dentist | Bangkok
+plumber | Bangkok
+electrician | Bangkok
+auto repair shop | Bangkok
+yoga studio | Bangkok
+pet grooming | Bangkok
+boutique clothing store | Bangkok
+photographer | Bangkok
+florist | Bangkok
+cleaning service | Bangkok
+real estate agency | Bangkok
+tattoo studio | Bangkok
+coworking space | Bangkok
+bakery | Bangkok

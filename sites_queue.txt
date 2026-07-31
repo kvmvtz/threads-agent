@@ -1,0 +1,16 @@
+# Queue of sites to post, one per line, oldest first (the agent always takes
+# the FIRST non-comment line each day and deletes it once posted).
+#
+# Format:  URL | Site Name | optional one-line hook about what makes it good
+#
+# The "Site Name" and hook are optional-ish — if you skip the hook, the
+# caption just won't have that extra line. If you skip the name too, the
+# domain name is used.
+#
+# Add as many lines as you want, whenever you find something cool — no need
+# to do it daily. The agent works through the list one per day and lets you
+# know (via a failed GitHub Actions run + email) when it runs dry.
+#
+# Examples (delete these and add your own real picks):
+# https://example-design-studio.com | Example Design Studio | that scroll-triggered hero section is the whole reason to visit
+# https://another-cool-site.com | Another Cool Site

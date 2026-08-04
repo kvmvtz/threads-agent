@@ -89,12 +89,23 @@ async function main() {
   }
   const rows = parseCsv(fs.readFileSync(CSV_PATH, 'utf8'));
   const header = rows[0];
-  const idxPhone = header.indexOf('Телефон');
   const idxPlaceId = header.indexOf('Место (Place ID)');
   const idxCompany = header.indexOf('Компания');
-  if (idxPhone === -1 || idxPlaceId === -1) {
+  if (idxPlaceId === -1 || idxCompany === -1) {
     console.error('leads_found.csv is missing expected columns — nothing to do.');
     return;
+  }
+
+  // Older rows (written before find-leads.js started saving phone numbers)
+  // don't have a "Телефон" column at all yet — add it right after "Компания"
+  // so it lines up with the header find-leads.js now writes, then backfill
+  // every row (existing rows get "—" as a placeholder until filled below).
+  let idxPhone = header.indexOf('Телефон');
+  if (idxPhone === -1) {
+    idxPhone = idxCompany + 1;
+    header.splice(idxPhone, 0, 'Телефон');
+    for (let i = 1; i < rows.length; i++) rows[i].splice(idxPhone, 0, '—');
+    console.log('Добавил колонку "Телефон" в CSV (её раньше не было).');
   }
 
   let updated = 0;

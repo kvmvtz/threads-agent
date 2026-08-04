@@ -39,19 +39,20 @@ const REPO = process.env.GITHUB_REPOSITORY;
 const REF = process.env.GITHUB_REF_NAME || 'main';
 const ACTIONS_TOKEN = process.env.GITHUB_TOKEN;
 
-const API_ID = Number(requireEnv('TELEGRAM_API_ID'));
-const API_HASH = requireEnv('TELEGRAM_API_HASH');
-const SESSION = requireEnv('TELEGRAM_SESSION');
+// Soft-checked (not requireEnv-style throw): until Nikita finishes the
+// one-time Telegram account setup, these secrets won't exist yet. That's an
+// expected, normal state while the schedule is on — not a real failure — so
+// main() below logs a friendly message and exits 0 instead of throwing.
+// Throwing here would mean a "run failed" email every 6 hours forever until
+// setup is done.
+const API_ID_RAW = process.env.TELEGRAM_API_ID;
+const API_HASH = process.env.TELEGRAM_API_HASH;
+const SESSION = process.env.TELEGRAM_SESSION;
+const API_ID = API_ID_RAW ? Number(API_ID_RAW) : null;
 
 const MAX_MESSAGES_PER_FETCH = Number(process.env.MAX_MESSAGES_PER_FETCH || 100);
 const MIN_DELAY_MS = 3000;
 const MAX_DELAY_MS = 9000;
-
-function requireEnv(name) {
-  const v = process.env[name];
-  if (!v) throw new Error(`Missing required env var: ${name}`);
-  return v;
-}
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
@@ -182,6 +183,16 @@ async function openLeadsIssue(newLeads) {
 // ---------- main ----------
 
 async function main() {
+  if (!API_ID || !API_HASH || !SESSION) {
+    console.log(
+      'TELEGRAM_API_ID / TELEGRAM_API_HASH / TELEGRAM_SESSION ещё не добавлены как секреты ' +
+      'репозитория — настройка Telegram-аккаунта ещё не завершена. Это нормально, если ты ' +
+      'до этого шага ещё не дошёл. Пропускаю прогон (не ошибка). См. README.md, раздел ' +
+      '"Setting up the Telegram lead finder".'
+    );
+    return;
+  }
+
   const chats = readLines(CHATS_PATH);
   if (!chats.length) {
     console.log('telegram_chats.txt пуст — список чатов ещё не составлен, пропускаю прогон.');

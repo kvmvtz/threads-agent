@@ -80,7 +80,7 @@ function appendSeenIds(ids) {
 }
 
 const CSV_HEADERS = [
-  'Дата находки', 'Источник', 'Компания', 'Сайт', 'Ниша', 'Сложность (оценка)',
+  'Дата находки', 'Источник', 'Компания', 'Телефон', 'Сайт', 'Ниша', 'Сложность (оценка)',
   'Проблема', 'Черновик сообщения', 'Место (Place ID)',
 ];
 
@@ -264,7 +264,7 @@ async function openLeadsIssue(newLeads) {
   const body = [
     `Найдено ${newLeads.length} новых лидов за этот прогон. Полная таблица — в \`leads_found.csv\`.`,
     '',
-    ...newLeads.map((l) => `- **${l['Компания']}** (${l['Ниша']}, ${l['Источник'].replace('Google Maps: ', '')}) — ${l['Проблема']}\n  Сайт: ${l['Сайт']}\n  Черновик: ${l['Черновик сообщения']}`),
+    ...newLeads.map((l) => `- **${l['Компания']}** (${l['Ниша']}, ${l['Источник'].replace('Google Maps: ', '')}) — ${l['Проблема']}\n  Телефон: ${l['Телефон']}\n  Сайт: ${l['Сайт']}\n  Черновик: ${l['Черновик сообщения']}`),
   ].join('\n');
 
   const res = await fetch(`https://api.github.com/repos/${REPO}/issues`, {
@@ -329,6 +329,7 @@ async function main() {
         'Дата находки': new Date().toISOString().slice(0, 10),
         'Источник': `Google Maps: ${category} in ${city}`,
         'Компания': place.displayName?.text || '(без названия)',
+        'Телефон': place.nationalPhoneNumber || '—',
         'Сайт': evaluation.website,
         'Ниша': category,
         'Сложность (оценка)': guessComplexity(category),

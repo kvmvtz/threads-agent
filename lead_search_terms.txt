@@ -8,6 +8,21 @@
 # must stay "Category | City" (city can include country if useful, e.g.
 # "Tbilisi, Georgia").
 
+hair salon | Florianopolis, Brazil
+dentist | Florianopolis, Brazil
+plumber | Florianopolis, Brazil
+electrician | Florianopolis, Brazil
+auto repair shop | Florianopolis, Brazil
+yoga studio | Florianopolis, Brazil
+pet grooming | Florianopolis, Brazil
+boutique clothing store | Florianopolis, Brazil
+photographer | Florianopolis, Brazil
+florist | Florianopolis, Brazil
+cleaning service | Florianopolis, Brazil
+real estate agency | Florianopolis, Brazil
+tattoo studio | Florianopolis, Brazil
+coworking space | Florianopolis, Brazil
+bakery | Florianopolis, Brazil
 hair salon | Lisbon
 dentist | Lisbon
 plumber | Lisbon
@@ -203,21 +218,6 @@ real estate agency | Sao Paulo
 tattoo studio | Sao Paulo
 coworking space | Sao Paulo
 bakery | Sao Paulo
-hair salon | Florianopolis
-dentist | Florianopolis
-plumber | Florianopolis
-electrician | Florianopolis
-auto repair shop | Florianopolis
-yoga studio | Florianopolis
-pet grooming | Florianopolis
-boutique clothing store | Florianopolis
-photographer | Florianopolis
-florist | Florianopolis
-cleaning service | Florianopolis
-real estate agency | Florianopolis
-tattoo studio | Florianopolis
-coworking space | Florianopolis
-bakery | Florianopolis
 hair salon | Bangkok
 dentist | Bangkok
 plumber | Bangkok

@@ -203,21 +203,21 @@ real estate agency | Chiang Mai
 tattoo studio | Chiang Mai
 coworking space | Chiang Mai
 bakery | Chiang Mai
-hair salon | Sao Paulo
-dentist | Sao Paulo
-plumber | Sao Paulo
-electrician | Sao Paulo
-auto repair shop | Sao Paulo
-yoga studio | Sao Paulo
-pet grooming | Sao Paulo
-boutique clothing store | Sao Paulo
-photographer | Sao Paulo
-florist | Sao Paulo
-cleaning service | Sao Paulo
-real estate agency | Sao Paulo
-tattoo studio | Sao Paulo
-coworking space | Sao Paulo
-bakery | Sao Paulo
+hair salon | Sao Paulo, Brazil
+dentist | Sao Paulo, Brazil
+plumber | Sao Paulo, Brazil
+electrician | Sao Paulo, Brazil
+auto repair shop | Sao Paulo, Brazil
+yoga studio | Sao Paulo, Brazil
+pet grooming | Sao Paulo, Brazil
+boutique clothing store | Sao Paulo, Brazil
+photographer | Sao Paulo, Brazil
+florist | Sao Paulo, Brazil
+cleaning service | Sao Paulo, Brazil
+real estate agency | Sao Paulo, Brazil
+tattoo studio | Sao Paulo, Brazil
+coworking space | Sao Paulo, Brazil
+bakery | Sao Paulo, Brazil
 hair salon | Bangkok
 dentist | Bangkok
 plumber | Bangkok

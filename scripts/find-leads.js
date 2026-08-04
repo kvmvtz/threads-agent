@@ -11,7 +11,15 @@
 //                                if both APIs are enabled on it)
 // Optional:
 //   MAX_TERMS_PER_RUN (default 6)
-//   PAGE_SIZE_PER_TERM (default 10)
+//   PAGE_SIZE_PER_TERM (default 5)
+//
+// Timing note: each place with a real website gets a live Google PageSpeed
+// (Lighthouse) audit, which routinely takes 10-30s per site — that's Google's
+// audit being slow, not a bug here. With up to MAX_TERMS_PER_RUN * PAGE_SIZE_PER_TERM
+// places per run, that adds up fast, so keep these two numbers modest relative
+// to the workflow's `timeout-minutes` (see find-leads.yml) or a run can get
+// killed mid-way (shows up as "The operation was canceled." in the log — not
+// an API error, just ran out of time).
 
 const fs = require('fs');
 const path = require('path');
@@ -29,7 +37,7 @@ const REF = process.env.GITHUB_REF_NAME || 'main';
 const PLACES_KEY = requireEnv('GOOGLE_PLACES_API_KEY');
 const PSI_KEY = requireEnv('GOOGLE_PAGESPEED_API_KEY');
 const MAX_TERMS_PER_RUN = Number(process.env.MAX_TERMS_PER_RUN || 6);
-const PAGE_SIZE_PER_TERM = Number(process.env.PAGE_SIZE_PER_TERM || 10);
+const PAGE_SIZE_PER_TERM = Number(process.env.PAGE_SIZE_PER_TERM || 5);
 const ACTIONS_TOKEN = process.env.GITHUB_TOKEN; // provided automatically by Actions
 
 function requireEnv(name) {
@@ -112,7 +120,7 @@ async function pagespeedScore(url) {
   endpoint.searchParams.set('url', url);
   endpoint.searchParams.set('key', PSI_KEY);
   endpoint.searchParams.set('strategy', 'mobile');
-  const res = await fetchWithTimeout(endpoint.toString(), {}, 45000);
+  const res = await fetchWithTimeout(endpoint.toString(), {}, 25000);
   const json = await res.json();
   if (!res.ok) throw new Error(`PSI error (${res.status}): ${JSON.stringify(json).slice(0, 300)}`);
   const score = json?.lighthouseResult?.categories?.performance?.score;
@@ -306,6 +314,7 @@ async function main() {
       if (!place.id || seenIds.has(place.id) || newSeenIds.includes(place.id)) continue;
       newSeenIds.push(place.id);
 
+      console.log(`  Проверяю: ${place.displayName?.text || place.id}`);
       let evaluation;
       try {
         evaluation = await evaluatePlace(place, category);

@@ -1,0 +1,25 @@
+name: Backfill lead emails (one-off)
+
+# Manual-only utility: fills in the "Email" column for leads_found.csv rows
+# that were created before that column existed. See scripts/backfill-emails.js
+# for details. Safe to re-run — already-filled rows are skipped. No API key
+# needed (just outbound internet access to each lead's own website).
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  backfill-emails:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+
+      - name: Backfill emails
+        run: node scripts/backfill-emails.js

@@ -23,6 +23,21 @@ real estate agency | Florianopolis, Brazil
 tattoo studio | Florianopolis, Brazil
 coworking space | Florianopolis, Brazil
 bakery | Florianopolis, Brazil
+hair salon | Prague
+dentist | Prague
+plumber | Prague
+electrician | Prague
+auto repair shop | Prague
+yoga studio | Prague
+pet grooming | Prague
+boutique clothing store | Prague
+photographer | Prague
+florist | Prague
+cleaning service | Prague
+real estate agency | Prague
+tattoo studio | Prague
+coworking space | Prague
+bakery | Prague
 hair salon | Lisbon
 dentist | Lisbon
 plumber | Lisbon
@@ -83,21 +98,6 @@ real estate agency | Budapest
 tattoo studio | Budapest
 coworking space | Budapest
 bakery | Budapest
-hair salon | Prague
-dentist | Prague
-plumber | Prague
-electrician | Prague
-auto repair shop | Prague
-yoga studio | Prague
-pet grooming | Prague
-boutique clothing store | Prague
-photographer | Prague
-florist | Prague
-cleaning service | Prague
-real estate agency | Prague
-tattoo studio | Prague
-coworking space | Prague
-bakery | Prague
 hair salon | Warsaw
 dentist | Warsaw
 plumber | Warsaw

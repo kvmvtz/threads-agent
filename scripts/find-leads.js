@@ -186,9 +186,56 @@ function detectSocialOnly(website) {
   return null;
 }
 
-async function evaluatePlace(place, category) {
+// Which language the drafted opener message is written in — the "Проблема"
+// column stays Russian either way (that's Nikita's own working note, not
+// something sent to the business). Currently: Brazilian Portuguese for
+// Brazil-based search terms (city contains "Brazil"), English everywhere
+// else. Add more cities/countries here if outreach should switch language
+// elsewhere too.
+function messageLangForCity(city) {
+  return /\bbrazil\b/i.test(city) ? 'pt' : 'en';
+}
+
+const OPENERS = {
+  en: {
+    noWebsite: (name) =>
+      `Hi! I noticed ${name} doesn't have a website yet — happy to put together a simple one so people can find/book you online. No pressure, just let me know if useful.`,
+    socialOnly: (name, platform) =>
+      `Hi! Noticed ${name} runs on a ${platform} page instead of its own website — happy to put together a simple site so people can find/book you directly (and own the domain/branding). No pressure, just let me know if useful.`,
+    siteDown: (name) =>
+      `Hi! Tried to check out ${name}'s website and it seems to be having issues loading — wanted to flag it in case that's costing you visitors. Happy to take a look if useful.`,
+    weakSite: (name, detail) =>
+      `Hi! Checked out ${name}'s website — noticed it ${detail}, which is probably costing you visitors. Happy to send a quick fix plan if useful, no pressure.`,
+    weakSiteDetail: (hasViewport, score) =>
+      !hasViewport
+        ? "doesn't render well on mobile"
+        : typeof score === 'number'
+        ? `scores ${score}/100 on Google's mobile speed test`
+        : 'has a few technical issues',
+  },
+  pt: {
+    noWebsite: (name) =>
+      `Olá! Percebi que a ${name} ainda não tem site — posso montar um simples para que as pessoas encontrem e marquem horário online. Sem compromisso, só avisar se for útil.`,
+    socialOnly: (name, platform) =>
+      `Olá! Percebi que a ${name} usa uma página do ${platform} em vez de um site próprio — posso montar um site simples para vocês, para que as pessoas encontrem e marquem direto com vocês (e vocês tenham domínio e marca próprios). Sem compromisso, só avisar se for útil.`,
+    siteDown: (name) =>
+      `Olá! Tentei acessar o site da ${name} e parece que está com problemas para carregar — quis avisar, porque isso pode estar custando visitantes. Posso dar uma olhada se for útil.`,
+    weakSite: (name, detail) =>
+      `Olá! Dei uma olhada no site da ${name} — percebi que ${detail}, o que provavelmente está custando visitantes. Posso enviar um plano rápido de correção se for útil, sem compromisso.`,
+    weakSiteDetail: (hasViewport, score) =>
+      !hasViewport
+        ? 'não é bem exibido em dispositivos móveis'
+        : typeof score === 'number'
+        ? `tem nota ${score}/100 no teste de velocidade mobile do Google`
+        : 'tem alguns problemas técnicos',
+  },
+};
+
+async function evaluatePlace(place, category, city) {
   const name = place.displayName?.text || '(без названия)';
   const website = place.websiteUri;
+  const lang = messageLangForCity(city);
+  const M = OPENERS[lang];
 
   if (!website) {
     return {
@@ -196,7 +243,7 @@ async function evaluatePlace(place, category) {
       website: '(нет сайта)',
       email: null,
       problem: 'Сайта нет вообще — самый простой питч: помочь появиться онлайн.',
-      opener: `Hi! I noticed ${name} doesn't have a website yet — happy to put together a simple one so people can find/book you online. No pressure, just let me know if useful.`,
+      opener: M.noWebsite(name),
     };
   }
 
@@ -207,7 +254,7 @@ async function evaluatePlace(place, category) {
       website,
       email: null, // no email source on a social/messaging-only page
       problem: `Вместо сайта — страница ${socialPlatform} (своего домена/сайта нет).`,
-      opener: `Hi! Noticed ${name} runs on a ${socialPlatform} page instead of its own website — happy to put together a simple site so people can find/book you directly (and own the domain/branding). No pressure, just let me know if useful.`,
+      opener: M.socialOnly(name, socialPlatform),
     };
   }
 
@@ -229,7 +276,7 @@ async function evaluatePlace(place, category) {
       website,
       email: signals?.email || null,
       problem: 'Сайт не отвечает нормально (ошибка/таймаут при проверке) — вероятно, серьёзные проблемы.',
-      opener: `Hi! Tried to check out ${name}'s website and it seems to be having issues loading — wanted to flag it in case that's costing you visitors. Happy to take a look if useful.`,
+      opener: M.siteDown(name),
     };
   }
 
@@ -246,7 +293,7 @@ async function evaluatePlace(place, category) {
     website,
     email: signals.email || null,
     problem: problems.join('; '),
-    opener: `Hi! Checked out ${name}'s website — noticed it ${!signals.hasViewport ? "doesn't render well on mobile" : (typeof score === 'number' ? `scores ${score}/100 on Google's mobile speed test` : 'has a few technical issues')}, which is probably costing you visitors. Happy to send a quick fix plan if useful, no pressure.`,
+    opener: M.weakSite(name, M.weakSiteDetail(signals.hasViewport, score)),
   };
 }
 
@@ -327,7 +374,7 @@ async function main() {
       console.log(`  Проверяю: ${place.displayName?.text || place.id}`);
       let evaluation;
       try {
-        evaluation = await evaluatePlace(place, category);
+        evaluation = await evaluatePlace(place, category, city);
       } catch (e) {
         console.error('Evaluation failed for', place.displayName?.text, e.message);
         continue;

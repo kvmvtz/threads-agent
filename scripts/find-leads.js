@@ -25,6 +25,7 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 const { guessComplexity } = require('./complexity-guess');
+const { extractEmail } = require('./extract-email');
 
 const ROOT = path.join(__dirname, '..');
 const TERMS_PATH = path.join(ROOT, 'lead_search_terms.txt');
@@ -80,7 +81,7 @@ function appendSeenIds(ids) {
 }
 
 const CSV_HEADERS = [
-  'Дата находки', 'Источник', 'Компания', 'Телефон', 'Сайт', 'Ниша', 'Сложность (оценка)',
+  'Дата находки', 'Источник', 'Компания', 'Телефон', 'Email', 'Сайт', 'Ниша', 'Сложность (оценка)',
   'Проблема', 'Черновик сообщения', 'Место (Place ID)',
 ];
 
@@ -145,9 +146,14 @@ async function rawSiteSignals(url) {
       ok: res.ok,
       isHttps: url.startsWith('https://'),
       hasViewport: /<meta[^>]+name=["']viewport["']/i.test(html),
+      // Best-effort only — same page we already downloaded, no extra
+      // request. Places API has no email field at all, so this (or the
+      // one-off backfill-emails.js, which also tries a couple of extra
+      // pages like /contact) is the only source for one.
+      email: extractEmail(html),
     };
   } catch (e) {
-    return { ok: false, isHttps: url.startsWith('https://'), hasViewport: false, error: String(e) };
+    return { ok: false, isHttps: url.startsWith('https://'), hasViewport: false, email: null, error: String(e) };
   }
 }
 
@@ -188,6 +194,7 @@ async function evaluatePlace(place, category) {
     return {
       isLead: true,
       website: '(нет сайта)',
+      email: null,
       problem: 'Сайта нет вообще — самый простой питч: помочь появиться онлайн.',
       opener: `Hi! I noticed ${name} doesn't have a website yet — happy to put together a simple one so people can find/book you online. No pressure, just let me know if useful.`,
     };
@@ -198,6 +205,7 @@ async function evaluatePlace(place, category) {
     return {
       isLead: true,
       website,
+      email: null, // no email source on a social/messaging-only page
       problem: `Вместо сайта — страница ${socialPlatform} (своего домена/сайта нет).`,
       opener: `Hi! Noticed ${name} runs on a ${socialPlatform} page instead of its own website — happy to put together a simple site so people can find/book you directly (and own the domain/branding). No pressure, just let me know if useful.`,
     };
@@ -212,13 +220,14 @@ async function evaluatePlace(place, category) {
   try {
     signals = await rawSiteSignals(website);
   } catch (e) {
-    signals = { ok: false, isHttps: website.startsWith('https://'), hasViewport: false };
+    signals = { ok: false, isHttps: website.startsWith('https://'), hasViewport: false, email: null };
   }
 
   if (errored || !signals.ok) {
     return {
       isLead: true,
       website,
+      email: signals?.email || null,
       problem: 'Сайт не отвечает нормально (ошибка/таймаут при проверке) — вероятно, серьёзные проблемы.',
       opener: `Hi! Tried to check out ${name}'s website and it seems to be having issues loading — wanted to flag it in case that's costing you visitors. Happy to take a look if useful.`,
     };
@@ -235,6 +244,7 @@ async function evaluatePlace(place, category) {
   return {
     isLead: true,
     website,
+    email: signals.email || null,
     problem: problems.join('; '),
     opener: `Hi! Checked out ${name}'s website — noticed it ${!signals.hasViewport ? "doesn't render well on mobile" : (typeof score === 'number' ? `scores ${score}/100 on Google's mobile speed test` : 'has a few technical issues')}, which is probably costing you visitors. Happy to send a quick fix plan if useful, no pressure.`,
   };
@@ -264,7 +274,7 @@ async function openLeadsIssue(newLeads) {
   const body = [
     `Найдено ${newLeads.length} новых лидов за этот прогон. Полная таблица — в \`leads_found.csv\`.`,
     '',
-    ...newLeads.map((l) => `- **${l['Компания']}** (${l['Ниша']}, ${l['Источник'].replace('Google Maps: ', '')}) — ${l['Проблема']}\n  Телефон: ${l['Телефон']}\n  Сайт: ${l['Сайт']}\n  Черновик: ${l['Черновик сообщения']}`),
+    ...newLeads.map((l) => `- **${l['Компания']}** (${l['Ниша']}, ${l['Источник'].replace('Google Maps: ', '')}) — ${l['Проблема']}\n  Телефон: ${l['Телефон']}\n  Email: ${l['Email']}\n  Сайт: ${l['Сайт']}\n  Черновик: ${l['Черновик сообщения']}`),
   ].join('\n');
 
   const res = await fetch(`https://api.github.com/repos/${REPO}/issues`, {
@@ -330,6 +340,7 @@ async function main() {
         'Источник': `Google Maps: ${category} in ${city}`,
         'Компания': place.displayName?.text || '(без названия)',
         'Телефон': place.nationalPhoneNumber || '—',
+        'Email': evaluation.email || '—',
         'Сайт': evaluation.website,
         'Ниша': category,
         'Сложность (оценка)': guessComplexity(category),

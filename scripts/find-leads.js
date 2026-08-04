@@ -280,13 +280,23 @@ async function evaluatePlace(place, category, city) {
     };
   }
 
-  const isWeak = (typeof score === 'number' && score < 50) || !signals.hasViewport || !signals.isHttps;
+  // A site scoring at/above HTTPS_ONLY_CEILING on PageSpeed is good enough
+  // that the owner almost certainly won't want to redo it — missing HTTPS
+  // alone isn't a real pitch there (seen in practice: 70-98/100 sites with
+  // no other issue were getting flagged purely for lacking HTTPS). Below the
+  // ceiling, missing HTTPS is still a legitimate, worth-mentioning problem.
+  // A genuinely low score, or a non-mobile-friendly layout (missing
+  // viewport), stays a real problem regardless of the ceiling.
+  const HTTPS_ONLY_CEILING = 65;
+  const scoreIsWeak = typeof score === 'number' && score < 50;
+  const httpsIsWeak = typeof score === 'number' && score < HTTPS_ONLY_CEILING && !signals.isHttps;
+  const isWeak = scoreIsWeak || !signals.hasViewport || httpsIsWeak;
   if (!isWeak) return { isLead: false };
 
   const problems = [];
-  if (typeof score === 'number' && score < 50) problems.push(`мобильная скорость ${score}/100 (Google PageSpeed)`);
+  if (scoreIsWeak) problems.push(`мобильная скорость ${score}/100 (Google PageSpeed)`);
   if (!signals.hasViewport) problems.push('не адаптирован под мобильные (нет viewport)');
-  if (!signals.isHttps) problems.push('нет HTTPS');
+  if (httpsIsWeak) problems.push('нет HTTPS');
 
   return {
     isLead: true,
